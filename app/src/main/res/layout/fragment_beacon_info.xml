@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".BeaconInfoFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="첫번째 Beacon 정보" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/hello_blank_fragment"
+            android:maxLines="10"
+            android:lines="10"
+            android:id="@+id/txtBeaconInfo1"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="첫번째  "
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/border"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="  좌표 정보 (X)  "
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/border"
+                />
+
+            <TextView
+                android:layout_width="80dip"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtFirstX"
+                android:text=" "
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/border"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="  좌표 정보 (Y)  "
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/border"
+                />
+            <TextView
+                android:layout_width="80dip"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtFirstY"
+                android:text=" "
+                android:background="@drawable/border"
+                />
+        </LinearLayout>.
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="두번째 Beacon 정보" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/hello_blank_fragment"
+            android:maxLines="10"
+            android:lines="10"
+            android:id="@+id/txtBeaconInfo2"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="두번째  "
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/border"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="  좌표 정보 (X)  "
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/border"
+                />
+
+            <TextView
+                android:layout_width="80dip"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtSecondX"
+                android:text=" "
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/border"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="  좌표 정보 (Y)  "
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/border"
+                />
+            <TextView
+                android:layout_width="80dip"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtSecondY"
+                android:text=" "
+                android:background="@drawable/border"
+                />
+        </LinearLayout>.
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="세번째 Beacon 정보" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/hello_blank_fragment"
+            android:maxLines="10"
+            android:lines="10"
+            android:id="@+id/txtBeaconInfo3"
+            />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="세번째  "
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/border"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="  좌표 정보 (X)  "
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/border"
+                />
+
+            <TextView
+                android:layout_width="80dip"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtThirdX"
+                android:text=" "
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/border"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="  좌표 정보 (Y)  "
+                android:layout_alignParentLeft="true"
+                android:background="@drawable/border"
+                />
+            <TextView
+                android:layout_width="80dip"
+                android:layout_height="wrap_content"
+                android:id="@+id/txtThirdY"
+                android:text=" "
+                android:background="@drawable/border"
+                />
+        </LinearLayout>.
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+            <Button
+                android:id="@+id/btOpen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left"
+                android:layout_alignParentLeft="true"
+                android:text="시작" />
+
+            <Button
+                android:id="@+id/btDataInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/btOpen"
+                android:text="데이터 등록" />
+
+            <Button
+                android:id="@+id/btClose"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="right"
+                android:text="종료" />
+        </RelativeLayout >
+
+    </LinearLayout>
+
+</FrameLayout>
