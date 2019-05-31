@@ -14,6 +14,7 @@ import android.widget.TextView;
 import kr.co.retailtech.mybeacon.network.model.ServiceRequest;
 import kr.co.retailtech.mybeacon.ui.viewmodel.BeaConInfoViewModel;
 import kr.co.retailtech.mybeacon.ui.viewmodel.BeaConInfoViewModelFactory;
+import kr.co.retailtech.mybeacon.utility.BeaconUtil;
 import kr.co.retailtech.mybeacon.utility.InjectorUtils;
 
 
@@ -45,6 +46,7 @@ public class BeaconInfoFragment extends Fragment implements View.OnClickListener
     Button btOpen, btClose, btDataInfo;
 
     private BeaConInfoViewModel beaConInfoViewModel;
+    private BeaconUtil beaconUtil;
 
     public BeaconInfoFragment() {
         // Required empty public constructor
@@ -98,6 +100,7 @@ public class BeaconInfoFragment extends Fragment implements View.OnClickListener
         btDataInfo.setOnClickListener(this);
         BeaConInfoViewModelFactory factory = InjectorUtils.getBeaConMainViewModelFactory(getActivity().getApplicationContext());
         beaConInfoViewModel = ViewModelProviders.of(getActivity(), factory).get(BeaConInfoViewModel.class);
+        beaconUtil = new BeaconUtil(getContext());
 
 
         return view;
@@ -114,10 +117,10 @@ public class BeaconInfoFragment extends Fragment implements View.OnClickListener
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.btOpen:
-         //       beaconUtil.startBeacon();
+                beaconUtil.startBeacon();
                 break;
             case R.id.btClose:
-           //     beaconUtil.stopBeacon();
+                beaconUtil.stopBeacon();
                 break;
             case R.id.btDataInfo:
                 postRequest();
@@ -147,5 +150,17 @@ public class BeaconInfoFragment extends Fragment implements View.OnClickListener
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        beaconUtil.startBeacon();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        beaconUtil.stopBeacon();
     }
 }
