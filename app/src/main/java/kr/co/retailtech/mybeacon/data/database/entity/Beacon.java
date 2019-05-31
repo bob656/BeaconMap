@@ -16,4 +16,9 @@ public class Beacon {
     public String beaconType;
     public String beaconTxType;
     public String beaconRadius;
+
+
+    //거리
+    public String distance;
+
 }
