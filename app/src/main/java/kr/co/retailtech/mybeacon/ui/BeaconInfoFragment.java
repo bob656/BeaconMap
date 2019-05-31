@@ -1,5 +1,6 @@
 package kr.co.retailtech.mybeacon.ui;
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -9,6 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import kr.co.retailtech.mybeacon.network.model.ServiceRequest;
+import kr.co.retailtech.mybeacon.ui.viewmodel.BeaConInfoViewModel;
+import kr.co.retailtech.mybeacon.ui.viewmodel.BeaConInfoViewModelFactory;
+import kr.co.retailtech.mybeacon.utility.InjectorUtils;
 
 
 /**
@@ -37,6 +43,8 @@ public class BeaconInfoFragment extends Fragment implements View.OnClickListener
     TextView txtThirdX, txtThirdY;
 
     Button btOpen, btClose, btDataInfo;
+
+    private BeaConInfoViewModel beaConInfoViewModel;
 
     public BeaconInfoFragment() {
         // Required empty public constructor
@@ -88,6 +96,9 @@ public class BeaconInfoFragment extends Fragment implements View.OnClickListener
         btClose.setOnClickListener(this);
         btDataInfo = view.findViewById(R.id.btDataInfo);
         btDataInfo.setOnClickListener(this);
+        BeaConInfoViewModelFactory factory = InjectorUtils.getBeaConMainViewModelFactory(getActivity().getApplicationContext());
+        beaConInfoViewModel = ViewModelProviders.of(getActivity(), factory).get(BeaConInfoViewModel.class);
+
 
         return view;
     }
@@ -109,22 +120,19 @@ public class BeaconInfoFragment extends Fragment implements View.OnClickListener
            //     beaconUtil.stopBeacon();
                 break;
             case R.id.btDataInfo:
-                /*
-                vBeaconViewModel.getBeaconList().observe(this, beacons -> {
-                    if(beacons != null && beacons.size() > 0){
-                        for(int i = 0 ; i < beacons.size() ; i++){
-                            Log.d(LOG_TAG, beacons.get(i).beaconUuid);
-                        }
-
-                    }
-                });
-                */
-              //  postRequest();
-
-
+                postRequest();
                 break;
         }
     }
+    private void postRequest() {
+        ServiceRequest serviceRequest = new ServiceRequest();
+        beaConInfoViewModel.beaConPostRequest(serviceRequest);
+        beaConInfoViewModel.linePostRequest(serviceRequest);
+        beaConInfoViewModel.zonePostRequest(serviceRequest);
+        beaConInfoViewModel.mapPostRequest(serviceRequest);
+
+    }
+
 
     /**
      * This interface must be implemented by activities that contain this
