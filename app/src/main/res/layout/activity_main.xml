@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
     <fragment
-        android:name="kr.co.retailtech.mybeacon.ui.BeaconInfoFragment"
+        android:name="kr.co.retailtech.mybeacon.ui.MapFragment"
         android:id="@+id/beacontest"
         android:layout_width="match_parent"
         android:layout_height="match_parent">

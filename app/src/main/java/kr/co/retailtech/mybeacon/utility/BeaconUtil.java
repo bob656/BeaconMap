@@ -117,7 +117,7 @@ public class BeaconUtil implements MinewBeaconManagerListener {
 
 
         if(benconInfo.size() > 2){
-            double[][] positions = new double[][] {{ 0.0, 0.0 }, { 0.0, 40.0 }, { 20.0, 20.0 }};
+            double[][] positions = new double[][] {{ 100.0, 100.0 }, { 100.0, 940 }, { 220, 320 }};
             double[] distances = new double[3];
 
             for(int i = 0 ; i < benconInfo.size() ; i++){
