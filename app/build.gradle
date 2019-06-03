@@ -44,5 +44,7 @@ dependencies {
     annotationProcessor "android.arch.persistence.room:compiler:1.1.0"
     implementation 'android.arch.lifecycle:extensions:1.1.1'
 
+    implementation 'uk.co.alt236:bluetooth-le-library-android:1.0.0'
 
+    implementation 'com.lemmingapex.trilateration:trilateration:1.0.2'
 }

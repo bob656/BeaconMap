@@ -11,6 +11,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.List;
+
+import kr.co.retailtech.mybeacon.data.database.entity.Beacon;
 import kr.co.retailtech.mybeacon.network.model.ServiceRequest;
 import kr.co.retailtech.mybeacon.ui.viewmodel.BeaConInfoViewModel;
 import kr.co.retailtech.mybeacon.ui.viewmodel.BeaConInfoViewModelFactory;
@@ -45,7 +48,7 @@ public class BeaconInfoFragment extends Fragment implements View.OnClickListener
 
     Button btOpen, btClose, btDataInfo;
 
-    private BeaConInfoViewModel beaConInfoViewModel;
+    public BeaConInfoViewModel beaConInfoViewModel;
     private BeaconUtil beaconUtil;
 
     public BeaconInfoFragment() {
@@ -101,7 +104,19 @@ public class BeaconInfoFragment extends Fragment implements View.OnClickListener
         BeaConInfoViewModelFactory factory = InjectorUtils.getBeaConMainViewModelFactory(getActivity().getApplicationContext());
         beaConInfoViewModel = ViewModelProviders.of(getActivity(), factory).get(BeaConInfoViewModel.class);
         beaconUtil = new BeaconUtil(getContext());
+        beaconUtil.getMutableLiveData().observe(this, beconInfos -> {
+            StringBuffer sb = new StringBuffer();
+            for(Beacon beacon : beconInfos){
+                sb.append(beacon.beaconUuid).append(" ").append( beacon.distance).append("\r\n");
+            };
+            txtBeaconInfo1.setText(sb.toString());
 
+        });
+
+        beaconUtil.getPostionMutableLiveData().observe(this, positions -> {
+            txtBeaconInfo2.setText(positions[0]+" : "+positions[1]);
+
+        });
 
         return view;
     }
@@ -118,6 +133,7 @@ public class BeaconInfoFragment extends Fragment implements View.OnClickListener
         switch (v.getId()){
             case R.id.btOpen:
                 beaconUtil.startBeacon();
+
                 break;
             case R.id.btClose:
                 beaconUtil.stopBeacon();

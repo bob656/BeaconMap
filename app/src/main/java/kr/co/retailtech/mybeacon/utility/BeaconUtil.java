@@ -1,16 +1,29 @@
 package kr.co.retailtech.mybeacon.utility;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.lemmingapex.trilateration.NonLinearLeastSquaresSolver;
+import com.lemmingapex.trilateration.TrilaterationFunction;
 import com.minew.beacon.BeaconValueIndex;
 import com.minew.beacon.BluetoothState;
 import com.minew.beacon.MinewBeacon;
 import com.minew.beacon.MinewBeaconManager;
 import com.minew.beacon.MinewBeaconManagerListener;
 
+import org.apache.commons.math3.fitting.leastsquares.LeastSquaresOptimizer;
+import org.apache.commons.math3.fitting.leastsquares.LeastSquaresOptimizer.Optimum;
+import org.apache.commons.math3.fitting.leastsquares.LevenbergMarquardtOptimizer;
+import org.apache.commons.math3.linear.RealMatrix;
+import org.apache.commons.math3.linear.RealVector;
+
+import java.util.ArrayList;
 import java.util.List;
+
+import kr.co.retailtech.mybeacon.data.database.entity.Beacon;
 
 public class BeaconUtil implements MinewBeaconManagerListener {
     private String LOG_TAG = BeaconUtil.class.getSimpleName();
@@ -23,10 +36,16 @@ public class BeaconUtil implements MinewBeaconManagerListener {
     // 1.get MinewBeaconManager instance
     MinewBeaconManager mMinewBeaconManager = null;
 
+    private MutableLiveData<List<Beacon>> getTempBeaconList;
+    private MutableLiveData<double[]> getPosition;
+
     public BeaconUtil(Context context){
         this.context = context;
         mMinewBeaconManager = MinewBeaconManager.getInstance(context);
         mMinewBeaconManager.setDeviceManagerDelegateListener(this);
+
+        getTempBeaconList = new MutableLiveData<List<Beacon>>();
+        getPosition = new MutableLiveData<double[]>();
     }
 
     public void startBeacon() {
@@ -63,27 +82,28 @@ public class BeaconUtil implements MinewBeaconManagerListener {
 
     private void processBeaconInfo (List<MinewBeacon> list, CheckFlag checkFlag)
     {
+        List<Beacon> benconInfo = new ArrayList<Beacon>();
         for(MinewBeacon minewBeacon: list){
             String major = minewBeacon.getBeaconValue(BeaconValueIndex.MinewBeaconValueIndex_Major).getStringValue();
             String minor = minewBeacon.getBeaconValue(BeaconValueIndex.MinewBeaconValueIndex_Minor).getStringValue();
-            if(major.equals("40101") && minor.equals("15073")) {
+            if( minor.equals("15136") || minor.equals("15073")  || minor.equals("15077")) {
                 Integer txPower = minewBeacon.getBeaconValue(BeaconValueIndex.MinewBeaconValueIndex_TxPower).getIntValue();
                 Integer rssi = minewBeacon.getBeaconValue(BeaconValueIndex.MinewBeaconValueIndex_RSSI).getIntValue();
-                double distance = calculateAccuracy(-59, rssi);
+                double distance = calculateAccuracy(-65, rssi);
+                //double distance = calculateAccuracy(-65, rssi);
 
-                double distance2 = calculateAccuracy(-65, rssi);
+                Beacon bc = new Beacon();
+                bc.beaconUuid = major.concat(minor);
+                bc.distance = Double.toString(distance);
+                benconInfo.add(bc);
 
                 StringBuffer logBuffer = new StringBuffer();
-                logBuffer.append("STATUS==>" + checkFlag)
-                        .append(" MAJOR==>" + major)
-                        .append(" MINOR==>" + minor)
-                        .append(" txPower==>" + txPower)
-                        .append(" RSSI==>" + rssi)
-                        .append(" DISTANCE==>" + distance)
-                        .append(" DISTANCE2==>" + distance2)
+                logBuffer.append(bc.beaconUuid)
+                        .append(  "\t" + rssi  + "\t")
+                        .append(distance)
                 ;
-
                 Log.d(LOG_TAG, logBuffer.toString());
+
                 switch (checkFlag) {
                     case INSERT:
                         break;
@@ -91,28 +111,68 @@ public class BeaconUtil implements MinewBeaconManagerListener {
                         break;
                     case DELETE:
                         break;
-
                 }
             }
         }
 
+
+        if(benconInfo.size() > 2){
+            double[][] positions = new double[][] {{ 0.0, 0.0 }, { 0.0, 40.0 }, { 20.0, 20.0 }};
+            double[] distances = new double[3];
+
+            for(int i = 0 ; i < benconInfo.size() ; i++){
+                distances[i] = Double.parseDouble(benconInfo.get(i).distance);
+            }
+            NonLinearLeastSquaresSolver solver = new NonLinearLeastSquaresSolver(new TrilaterationFunction(positions, distances), new LevenbergMarquardtOptimizer());
+            Optimum optimum = solver.solve();
+
+            // the answer
+            double[] centroid = optimum.getPoint().toArray();
+
+            // error and geometry information; may throw SingularMatrixException depending the threshold argument provided
+            RealVector standardDeviation = optimum.getSigma(0);
+            RealMatrix covarianceMatrix = optimum.getCovariances(0);
+            getTempBeaconList.setValue(benconInfo);
+            getPosition.setValue(centroid);
+
+        }
+
+    }
+
+    public LiveData<List<Beacon>> getMutableLiveData(){
+        return getTempBeaconList;
+    }
+    public LiveData<double[]> getPostionMutableLiveData(){
+        return getPosition;
     }
 
     protected double calculateAccuracy(int txPower, double rssi) {
-        double POW_CONSTANT = 10;
-        double BEST_SIGNAL_CONSTANT = 0.89976;
-        double BEST_POW_CONSTANT = 7.7095;
-        double BEST_ADDED_CONSTANT = 0.111;
+        double POW_CONSTANT = 10.0d;
+//        double BEST_SIGNAL_CONSTANT = 0.89976;
+//        double BEST_POW_CONSTANT = 7.7095;
+//        double BEST_ADDED_CONSTANT = 0.111;
 
+        double BEST_SIGNAL_CONSTANT = 0.42093;
+        double BEST_POW_CONSTANT = 6.9476;
+        double BEST_ADDED_CONSTANT =0.54992;
+
+        /*
+        double BEST_SIGNAL_CONSTANT = 0.9401940951;
+        double BEST_POW_CONSTANT = 6.170094565;
+        double BEST_ADDED_CONSTANT =0.0;
+*/
         if (rssi == 0) {
-            return -1.0; // if we cannot determine accuracy, return -1.
+            return -1.0d; // if we cannot determine accuracy, return -1.
         }
-        double ratio = rssi*1.0/txPower;
-        if (ratio < 1.0) {
+
+        double distance;
+        double ratio = (1.0d * rssi) / ((double) txPower);
+
+        if (ratio < 1.0d) {
             return Math.pow(ratio,POW_CONSTANT);
         }
         else {
-            double accuracy =  BEST_SIGNAL_CONSTANT * Math.pow(ratio,BEST_POW_CONSTANT) + BEST_ADDED_CONSTANT;
+            double accuracy =  (BEST_SIGNAL_CONSTANT * Math.pow(ratio,BEST_POW_CONSTANT)) + BEST_ADDED_CONSTANT;
             return accuracy;
         }
     }

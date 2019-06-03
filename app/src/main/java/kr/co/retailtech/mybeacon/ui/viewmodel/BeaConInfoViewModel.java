@@ -1,6 +1,7 @@
 package kr.co.retailtech.mybeacon.ui.viewmodel;
 
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
 import java.util.List;
@@ -16,6 +17,7 @@ public class BeaConInfoViewModel extends ViewModel {
     private final LiveData<List<Line>> mLineData;
     private final LiveData<List<Zone>> mZoneData;
     private final LiveData<List<Map>> mMapData;
+
 
     public BeaConInfoViewModel(CommonRepository commonRepository) {
         this.commonRepository = commonRepository;
