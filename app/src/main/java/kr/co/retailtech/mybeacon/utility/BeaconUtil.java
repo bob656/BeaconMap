@@ -160,7 +160,8 @@ public class BeaconUtil implements MinewBeaconManagerListener {
         double BEST_SIGNAL_CONSTANT = 0.9401940951;
         double BEST_POW_CONSTANT = 6.170094565;
         double BEST_ADDED_CONSTANT =0.0;
-*/
+        */
+
         if (rssi == 0) {
             return -1.0d; // if we cannot determine accuracy, return -1.
         }
